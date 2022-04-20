@@ -60,7 +60,7 @@ for col in range(differences.shape[1]):
                 new_df[new_col_name][cell] = m
                 print("Differences with ", new_col_name, " at ", cell, " should be = ", m)
 #differences = differences.drop(columns=header_name_to_drop, axis=1)
-#differences.columns = header_names 
+#differences.columns = header_names
 
 #%%
 new_df.style.applymap(_color_red_or_green)
