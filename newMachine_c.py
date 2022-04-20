@@ -5,6 +5,7 @@ import pandas as pd
 import webbrowser
 import time
 from codecarbon import EmissionsTracker
+import numpy as np
 #from helper_xlsx import *
 
 tracker = EmissionsTracker()
@@ -149,6 +150,14 @@ def filter_selections_demo(steps, include_header_footer):
     else:
         body_filters1(steps)
 
+#%% Randomization
+coordinates = pd.read_excel(file, sheet_name=current_tabs.Name[0])
+d_coordinates = coordinates.copy()
+
+for r in range(len(d_coordinates["Nr_Elements"])):
+    d_coordinates["Nr_Elements"][r] = np.random.randint(0, d_coordinates["Nr_Elements"][r], size=1, dtype=int)
+
+
 #%% Starting the browser
 webbrowser.open('https://qlikview-qa.srv.volvo.com/QvAJAXZfc/opendoc.htm?document=gtt-apmcd%5Cmce.qvw&lang=en-US&host=QVS%40QA')
 #start_recording()
@@ -160,16 +169,22 @@ with pg.hold('ctrl'):
 # going through each xlsx sheet with filters and calling filter_selections to imitate user's behavious
 for y in range(len(current_tabs)):
     print(current_tabs.Name[y])
-    steps = pd.read_excel(file, sheet_name=current_tabs.Name[y])
-    print(f"reading the {current_tabs.Name[y]}")
+    steps = d_coordinates
+    print(f"reading the {d_coordinates}")
+    #steps = pd.read_excel(file, sheet_name=current_tabs.Name[y])
+    #print(f"reading the {current_tabs.Name[y]}")
     print("===============================")
     pg.click(current_tabs.X[y], current_tabs.Y[y])
     if current_tabs.Name[y] == "Commodity":
         print("Headless")
+        if d_coordinates["Nr_Elements"][9] > 0:
+            d_coordinates["Nr_Elements"][8] = 1
         filter_selections_demo(steps, False)
+        
     else:
         print("FullBody")
         filter_selections_demo(steps, True)
+
 
 #end_recording()
 # %%
